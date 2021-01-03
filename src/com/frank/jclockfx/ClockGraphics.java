@@ -80,8 +80,10 @@ public class ClockGraphics {
     }
 
     private void loadFont() {
+        double fontPorcent = UNIT_PORCENT * 10;
+
         numbersFont = Font.loadFont(getClass()
-                .getResourceAsStream("/resources/font/ancient_geek/geek.ttf"), 25);
+                .getResourceAsStream("/resources/font/ancient_geek/geek.ttf"), fontPorcent);
     }
 
 
