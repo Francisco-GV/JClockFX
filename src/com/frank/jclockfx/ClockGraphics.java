@@ -35,7 +35,7 @@ public class ClockGraphics {
     private MediaPlayer tacSound;
 
     public ClockGraphics(GraphicsContext graphicsContext) {
-        setRadius(MID_RADIUS);
+        setRadius(BIG_RADIUS);
         this.g = graphicsContext;
         clockTimer = new ClockTimer();
 
@@ -227,7 +227,8 @@ public class ClockGraphics {
         loadFont();
     }
 
-    public static double MIN_RADIUS = 100.0;
-    public static double MID_RADIUS = 200.0;
-    public static double MAX_RADIUS = 300.0;
+    public static final double MIN_RADIUS = 90.0;
+    public static final double MID_RADIUS = 150.0;
+    public static final double BIG_RADIUS = 250.0;
+    public static final double MAX_RADIUS = 350.0;
 }
