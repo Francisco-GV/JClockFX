@@ -22,7 +22,7 @@ public class JClockFX extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Canvas canvas = new Canvas(600, 600);
+        Canvas canvas = new Canvas(700, 700);
         ClockGraphics clockGraphics = new ClockGraphics(canvas.getGraphicsContext2D());
 
         AnchorPane anchorPane = new AnchorPane(canvas);
@@ -34,10 +34,12 @@ public class JClockFX extends Application {
         ToggleGroup toggleGroup = new ToggleGroup();
         RadioMenuItem minItem = new RadioMenuItem("Little");
         RadioMenuItem midItem = new RadioMenuItem("Medium");
-        RadioMenuItem maxItem = new RadioMenuItem("Big");
+        RadioMenuItem bigItem = new RadioMenuItem("Big");
+        RadioMenuItem maxItem = new RadioMenuItem("Bigger");
 
         minItem.setToggleGroup(toggleGroup);
         midItem.setToggleGroup(toggleGroup);
+        bigItem.setToggleGroup(toggleGroup);
         maxItem.setToggleGroup(toggleGroup);
 
         minItem.selectedProperty().addListener((obs, old, newValue) -> {
@@ -50,15 +52,20 @@ public class JClockFX extends Application {
                 clockGraphics.setRadius(ClockGraphics.MID_RADIUS);
             }
         });
+        bigItem.selectedProperty().addListener((obs, old, newValue) -> {
+            if (newValue) {
+                clockGraphics.setRadius(ClockGraphics.BIG_RADIUS);
+            }
+        });
         maxItem.selectedProperty().addListener((obs, old, newValue) -> {
             if (newValue) {
                 clockGraphics.setRadius(ClockGraphics.MAX_RADIUS);
             }
         });
 
-        midItem.setSelected(true);
+        bigItem.setSelected(true);
 
-        sizeMenu.getItems().addAll(minItem, midItem, maxItem);
+        sizeMenu.getItems().addAll(minItem, midItem, bigItem, maxItem);
 
         MenuItem minimizeItem = new MenuItem("Minimize");
         MenuItem closeItem = new MenuItem("Close");
