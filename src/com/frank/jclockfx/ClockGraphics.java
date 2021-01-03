@@ -1,5 +1,6 @@
 package com.frank.jclockfx;
 
+import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -10,14 +11,11 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class ClockGraphics {
     private final GraphicsContext g;
     private final ClockTimer clockTimer;
-    private final Timer timer;
-    private TimerTask executeTask;
+    private final AnimationTimer timer;
 
     private final double radius = 250.0;
     private double canvasWidth;
@@ -35,12 +33,36 @@ public class ClockGraphics {
     private MediaPlayer ticSound;
     private MediaPlayer tacSound;
 
-    private boolean exit = false;
-
     public ClockGraphics(GraphicsContext graphicsContext) {
         this.g = graphicsContext;
-        timer = new Timer();
         clockTimer = new ClockTimer();
+
+        timer = new AnimationTimer() {
+            private boolean tic;
+            @Override
+            public void handle(long now) {
+                makeSound();
+                draw();
+            }
+
+            int lastSecond = clockTimer.getSecond();
+            private void makeSound() {
+                if (lastSecond != clockTimer.getSecond()) {
+                    if (tic) {
+                        ticSound.play();
+                        tacSound.stop();
+                    } else {
+                        tacSound.play();
+                        ticSound.stop();
+                    }
+                    tic = !tic;
+                    lastSecond = clockTimer.getSecond();
+                }
+            }
+        };
+
+        timer.start();
+
         loadSound();
         loadFont();
     }
@@ -64,40 +86,12 @@ public class ClockGraphics {
 
     public void start() {
         init();
-        executeTask = new TimerTask() {
-            private boolean tic;
-            @Override
-            public void run() {
-                if (!exit) {
-                    makeSound();
-                    draw();
-                }
-            }
-
-            int lastSecond = clockTimer.getSecond();
-            private void makeSound() {
-                if (lastSecond != clockTimer.getSecond()) {
-                    if (tic) {
-                        ticSound.play();
-                        tacSound.stop();
-                    } else {
-                        tacSound.play();
-                        ticSound.stop();
-                    }
-                    tic = !tic;
-                    lastSecond = clockTimer.getSecond();
-                }
-            }
-        };
-        timer.scheduleAtFixedRate(executeTask, 0L, 100L);
     }
 
     public void finish() {
         ticSound.dispose();
         tacSound.dispose();
-        executeTask.cancel();
-        timer.cancel();
-        exit = true;
+        timer.stop();
     }
 
     private void init() {
