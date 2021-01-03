@@ -1,5 +1,7 @@
 # JClockFX
 A simple analog clock made with **Java** and **JavaFX**.
 
-<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.</div>
-<div>Font <i><a href="https://www.dafont.com/es/ancient-geek.font">Ancient Geek</a></i> created by <a href="https://www.dafont.com/es/matthew-welch.d318">Matthew Welch</a>.</div>
+![image](https://user-images.githubusercontent.com/54688495/103469931-12dad680-4d31-11eb-95f9-72efd0c3baff.png)
+
+Icons made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/)
+Font [Ancient Geek](https://www.dafont.com/es/ancient-geek.font) created by [Matthew Welch](https://www.dafont.com/es/matthew-welch.d318).
