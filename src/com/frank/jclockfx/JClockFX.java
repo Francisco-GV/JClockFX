@@ -1,5 +1,10 @@
 package com.frank.jclockfx;
 
+import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Menu;
+import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.ToggleGroup;
 import resources.utilities.WindowDragger;
 
 import javafx.application.Application;
@@ -17,26 +22,60 @@ public class JClockFX extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        Canvas canvas = new Canvas(500, 500);
+        Canvas canvas = new Canvas(600, 600);
         ClockGraphics clockGraphics = new ClockGraphics(canvas.getGraphicsContext2D());
 
         AnchorPane anchorPane = new AnchorPane(canvas);
         anchorPane.setStyle("-fx-background-color: transparent;");
 
-        MenuItem onTopItem = new MenuItem("Always on top");
-        MenuItem muteItem = new MenuItem("Mute");
+        CheckMenuItem onTopItem = new CheckMenuItem("Always on top");
+        CheckMenuItem muteItem = new CheckMenuItem("Mute");
+        Menu sizeMenu = new Menu("Size");
+        ToggleGroup toggleGroup = new ToggleGroup();
+        RadioMenuItem minItem = new RadioMenuItem("Little");
+        RadioMenuItem midItem = new RadioMenuItem("Medium");
+        RadioMenuItem maxItem = new RadioMenuItem("Big");
+
+        minItem.setToggleGroup(toggleGroup);
+        midItem.setToggleGroup(toggleGroup);
+        maxItem.setToggleGroup(toggleGroup);
+
+        minItem.selectedProperty().addListener((obs, old, newValue) -> {
+            if (newValue) {
+                clockGraphics.setRadius(ClockGraphics.MIN_RADIUS);
+            }
+        });
+        midItem.selectedProperty().addListener((obs, old, newValue) -> {
+            if (newValue) {
+                clockGraphics.setRadius(ClockGraphics.MID_RADIUS);
+            }
+        });
+        maxItem.selectedProperty().addListener((obs, old, newValue) -> {
+            if (newValue) {
+                clockGraphics.setRadius(ClockGraphics.MAX_RADIUS);
+            }
+        });
+
+        midItem.setSelected(true);
+
+        sizeMenu.getItems().addAll(minItem, midItem, maxItem);
+
         MenuItem minimizeItem = new MenuItem("Minimize");
         MenuItem closeItem = new MenuItem("Close");
-        ContextMenu contextMenu = new ContextMenu(onTopItem, muteItem, minimizeItem, closeItem);
+        ContextMenu contextMenu = new ContextMenu(
+                onTopItem,
+                muteItem,
+                new SeparatorMenuItem(),
+                sizeMenu,
+                new SeparatorMenuItem(),
+                minimizeItem,
+                closeItem);
 
-        onTopItem.setOnAction(e -> {
-            primaryStage.setAlwaysOnTop(!primaryStage.isAlwaysOnTop());
-            onTopItem.setText("Always on top " + (primaryStage.isAlwaysOnTop() ? "\u2714" : " "));
-        });
-        muteItem.setOnAction(e -> {
-            clockGraphics.setMute(!clockGraphics.isMute());
-            muteItem.setText("Mute " + ((clockGraphics.isMute()) ? "\u2714" : " "));
-        });
+        onTopItem.setSelected(false);
+        muteItem.setSelected(false);
+
+        onTopItem.selectedProperty().addListener((obs, old, newValue) -> primaryStage.setAlwaysOnTop(newValue));
+        muteItem.selectedProperty().addListener((obs, old, newValue) -> clockGraphics.setMute(newValue));
         minimizeItem.setOnAction(e -> primaryStage.setIconified(true));
         closeItem.setOnAction(e -> primaryStage.close());
         anchorPane.setOnContextMenuRequested(e -> contextMenu.show(primaryStage, e.getScreenX(), e.getScreenY()));
