@@ -17,8 +17,8 @@ public class ClockGraphics {
     private final ClockTimer clockTimer;
     private final AnimationTimer timer;
 
-    private final double RADIUS = 250.0;
-    private final double UNIT_PORCENT = RADIUS / 100;
+    private double radius;
+    private double unitPorcent;
     private double canvasWidth;
     private double canvasHeight;
     private double zeroX;
@@ -35,6 +35,7 @@ public class ClockGraphics {
     private MediaPlayer tacSound;
 
     public ClockGraphics(GraphicsContext graphicsContext) {
+        setRadius(MID_RADIUS);
         this.g = graphicsContext;
         clockTimer = new ClockTimer();
 
@@ -80,7 +81,7 @@ public class ClockGraphics {
     }
 
     private void loadFont() {
-        double fontPorcent = UNIT_PORCENT * 10;
+        double fontPorcent = unitPorcent * 10;
 
         numbersFont = Font.loadFont(getClass()
                 .getResourceAsStream("/resources/font/ancient_geek/geek.ttf"), fontPorcent);
@@ -111,36 +112,36 @@ public class ClockGraphics {
         drawBackground();
         drawNumbers();
 
-        double lineSecondPosition    = UNIT_PORCENT * 85;
-        double lineHourPosition      = UNIT_PORCENT * 80;
+        double lineSecondPosition    = unitPorcent * 85;
+        double lineHourPosition      = unitPorcent * 80;
 
-        double lineSecondSize        = UNIT_PORCENT * 4;
-        double lineHourSize          = UNIT_PORCENT * 8;
+        double lineSecondSize        = unitPorcent * 4;
+        double lineHourSize          = unitPorcent * 8;
 
-        double lineSecondWidth       = UNIT_PORCENT * 0.4;
-        double lineHourWidth         = UNIT_PORCENT * 1;
+        double lineSecondWidth       = unitPorcent * 0.4;
+        double lineHourWidth         = unitPorcent * 1;
 
         drawLines(lineSecondPosition, lineSecondSize, 60, lineSecondWidth); // seconds
         drawLines(lineHourPosition, lineHourSize, 12, lineHourWidth); // hours
 
-        double secondHandSize    = UNIT_PORCENT * 65;
-        double minuteHandSize    = UNIT_PORCENT * 50;
-        double hourHandSize      = UNIT_PORCENT * 40;
+        double secondHandSize    = unitPorcent * 65;
+        double minuteHandSize    = unitPorcent * 50;
+        double hourHandSize      = unitPorcent * 40;
 
-        double secondHandWidth   = UNIT_PORCENT * 0.6;
-        double minuteHandWidth   = UNIT_PORCENT * 1;
-        double hourHandWidth     = UNIT_PORCENT * 1.4;
+        double secondHandWidth   = unitPorcent * 0.6;
+        double minuteHandWidth   = unitPorcent * 1;
+        double hourHandWidth     = unitPorcent * 1.4;
 
         drawHand(360.0 / 60 * clockTimer.getSecond(), Color.WHITE, secondHandSize, secondHandWidth);
         drawHand(360.0 / 60 * clockTimer.getMinute(), Color.WHITESMOKE, minuteHandSize, minuteHandWidth);
         drawHand(360.0 / 12 * clockTimer.getHour(), Color.FLORALWHITE, hourHandSize, hourHandWidth);
 
-        double centerCircleRadius = UNIT_PORCENT * 3;
+        double centerCircleRadius = unitPorcent * 3;
 
         g.setFill(getColor(200, 200, 200, 1));
         g.fillOval(-centerCircleRadius, -centerCircleRadius, centerCircleRadius * 2, centerCircleRadius * 2);
 
-        double borderCircleRadius = UNIT_PORCENT * 92;
+        double borderCircleRadius = unitPorcent * 92;
 
         g.setStroke(Color.DARKRED);
         g.strokeOval(-borderCircleRadius, -borderCircleRadius, borderCircleRadius * 2, borderCircleRadius * 2);
@@ -150,8 +151,8 @@ public class ClockGraphics {
         g.setFont(numbersFont);
         for (int i = 0; i < 12; i++) {
             double deg = (360.0 / 12 * i) - 60;
-            double x = UNIT_PORCENT * 70 * Math.cos(Math.toRadians(deg));
-            double y = UNIT_PORCENT * 70 * Math.sin(Math.toRadians(deg));
+            double x = unitPorcent * 70 * Math.cos(Math.toRadians(deg));
+            double y = unitPorcent * 70 * Math.sin(Math.toRadians(deg));
 
             Text number = new Text(numberValues[i]);
             number.setFont(numbersFont);
@@ -180,14 +181,14 @@ public class ClockGraphics {
 
     private void drawBackground() {
         g.setFill(getColor(20, 20, 20, 0.9));
-        g.fillOval(-RADIUS, -RADIUS, RADIUS * 2, RADIUS * 2);
+        g.fillOval(-radius, -radius, radius * 2, radius * 2);
     }
 
     private void drawHand(double deg, Color handColor, double handSize, double handWidth) {
         double pointX = handSize * Math.cos(Math.toRadians(deg - 90));
         double pointY = handSize * Math.sin(Math.toRadians(deg - 90));
 
-        double minSizePorcent = UNIT_PORCENT * 8;
+        double minSizePorcent = unitPorcent * 8;
 
         double minPointX = minSizePorcent * Math.cos(Math.toRadians(deg - 270));
         double minPointY = minSizePorcent * Math.sin(Math.toRadians(deg - 270));
@@ -220,7 +221,13 @@ public class ClockGraphics {
         tacSound.setMute(mute);
     }
 
-    public boolean isMute() {
-        return ticSound.isMute() && tacSound.isMute();
+    public void setRadius(double radius) {
+        this.radius = radius;
+        unitPorcent = radius / 100;
+        loadFont();
     }
+
+    public static double MIN_RADIUS = 100.0;
+    public static double MID_RADIUS = 200.0;
+    public static double MAX_RADIUS = 300.0;
 }
