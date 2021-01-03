@@ -1,2 +1,4 @@
 # JClockFX
-A simple clock made with Java.
+A simple analog clock made with **Java** and **JavaFX**.
+
+<div>Icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
