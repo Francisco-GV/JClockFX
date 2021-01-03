@@ -6,6 +6,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.shape.StrokeLineJoin;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.io.File;
 import java.util.Timer;
@@ -23,6 +25,13 @@ public class ClockGraphics {
     private double zeroX;
     private double zeroY;
 
+    private Font numbersFont;
+    // The font has custom numbers, so, yes, it makes sense
+    private final String[] numberValues = new String[] { /*
+             1    2    3     4    5     6     7     8     9,  10    11    12 */
+            "1", "2", "3", "14", "4", "41", "42", "43", "15", "5", "51", "52"
+    };
+
     private MediaPlayer ticSound;
     private MediaPlayer tacSound;
 
@@ -33,6 +42,7 @@ public class ClockGraphics {
         timer = new Timer();
         clockTimer = new ClockTimer();
         loadSound();
+        loadFont();
     }
 
     private void loadSound() {
@@ -44,6 +54,11 @@ public class ClockGraphics {
 
         ticSound.setVolume(0.2);
         tacSound.setVolume(0.2);
+    }
+
+    private void loadFont() {
+        numbersFont = Font.loadFont(getClass()
+                .getResourceAsStream("/resources/font/ancient_geek/geek.ttf"), 25);
     }
 
 
@@ -85,7 +100,7 @@ public class ClockGraphics {
         exit = true;
     }
 
-    public void init() {
+    private void init() {
         canvasWidth = g.getCanvas().getWidth();
         canvasHeight = g.getCanvas().getHeight();
 
@@ -94,10 +109,11 @@ public class ClockGraphics {
         g.translate(zeroX, zeroY);
     }
 
-    public void draw() {
+    private void draw() {
         clear();
         drawBackground();
-        drawLines(radius - 45, 15.0, 60, 1); // seconds
+        drawNumbers();
+        drawLines(radius - 40, 10.0, 60, 1); // seconds
         drawLines(radius - 50, 20.0, 12, 2.5); // hours
         drawHand(360.0 / 60 * clockTimer.getSecond(), Color.WHITE, radius - 30, 25);
         drawHand(360.0 / 60 * clockTimer.getMinute(), Color.WHITESMOKE, radius - 100, 20);
@@ -108,6 +124,24 @@ public class ClockGraphics {
 
         g.setStroke(Color.DARKRED);
         g.strokeOval(-zeroX + 20, -zeroY + 20, (radius - 20) * 2, (radius - 20) * 2);
+    }
+
+    private void drawNumbers() {
+        g.setFont(numbersFont);
+        for (int i = 0; i < 12; i++) {
+            double deg = (360.0 / 12 * i) - 60;
+            double x = (radius - 75) * Math.cos(Math.toRadians(deg));
+            double y = (radius - 75) * Math.sin(Math.toRadians(deg));
+
+            Text number = new Text(numberValues[i]);
+            number.setFont(numbersFont);
+
+            double textWidth = number.getLayoutBounds().getWidth();
+            double textHeight = number.getLayoutBounds().getHeight();
+
+            g.setFill(Color.WHITE);
+            g.fillText(number.getText(), x - textWidth / 2, y + textHeight / 2);
+        }
     }
 
     private void drawLines(double radiusLocation, double size, int number, double width) {
