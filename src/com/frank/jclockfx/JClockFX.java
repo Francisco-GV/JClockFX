@@ -25,8 +25,9 @@ public class JClockFX extends Application {
 
         MenuItem onTopItem = new MenuItem("Always on top");
         MenuItem muteItem = new MenuItem("Mute");
+        MenuItem minimizeItem = new MenuItem("Minimize");
         MenuItem closeItem = new MenuItem("Close");
-        ContextMenu contextMenu = new ContextMenu(onTopItem, muteItem, closeItem);
+        ContextMenu contextMenu = new ContextMenu(onTopItem, muteItem, minimizeItem, closeItem);
 
         onTopItem.setOnAction(e -> {
             primaryStage.setAlwaysOnTop(!primaryStage.isAlwaysOnTop());
@@ -36,6 +37,7 @@ public class JClockFX extends Application {
             clockGraphics.setMute(!clockGraphics.isMute());
             muteItem.setText("Mute " + ((clockGraphics.isMute()) ? "\u2714" : " "));
         });
+        minimizeItem.setOnAction(e -> primaryStage.setIconified(true));
         closeItem.setOnAction(e -> primaryStage.close());
         anchorPane.setOnContextMenuRequested(e -> contextMenu.show(primaryStage, e.getScreenX(), e.getScreenY()));
 
