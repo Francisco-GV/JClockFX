@@ -115,9 +115,9 @@ public class ClockGraphics {
         drawNumbers();
         drawLines(radius - 40, 10.0, 60, 1); // seconds
         drawLines(radius - 50, 20.0, 12, 2.5); // hours
-        drawHand(360.0 / 60 * clockTimer.getSecond(), Color.WHITE, radius - 30, 25);
-        drawHand(360.0 / 60 * clockTimer.getMinute(), Color.WHITESMOKE, radius - 100, 20);
-        drawHand(360.0 / 12 * clockTimer.getHour()  , Color.LIGHTSLATEGRAY, radius - 175, 15);
+        drawHand(360.0 / 60 * clockTimer.getSecond(), Color.WHITE,          radius - 85,    1.5);
+        drawHand(360.0 / 60 * clockTimer.getMinute(), Color.WHITESMOKE,     radius - 120,   2.5);
+        drawHand(360.0 / 12 * clockTimer.getHour()  , Color.LIGHTSLATEGRAY, radius - 150,   3.5);
 
         g.setFill(getColor(200, 200, 200, 1));
         g.fillOval(-7, -7, 14, 14);
@@ -163,20 +163,20 @@ public class ClockGraphics {
         g.fillOval(-zeroX, -zeroY, radius * 2, radius * 2);
     }
 
-    private void drawHand(double deg, Color handColor, double handSize, double minHandSize) {
+    private void drawHand(double deg, Color handColor, double handSize, double handWidth) {
         double pointX = handSize * Math.cos(Math.toRadians(deg - 90));
         double pointY = handSize * Math.sin(Math.toRadians(deg - 90));
 
-        double minPointX = minHandSize * Math.cos(Math.toRadians(deg - 270));
-        double minPointY = minHandSize * Math.sin(Math.toRadians(deg - 270));
+        double minPointX = 20.0 * Math.cos(Math.toRadians(deg - 270));
+        double minPointY = 20.0 * Math.sin(Math.toRadians(deg - 270));
 
         g.setLineCap(StrokeLineCap.ROUND);
         g.setLineJoin(StrokeLineJoin.ROUND);
-        g.setLineWidth(2);
+        g.setLineWidth(handWidth);
         g.setStroke(handColor);
         g.strokeLine(0, 0, (int) pointX, (int) pointY);
 
-        g.setLineWidth(4);
+        g.setLineWidth(handWidth * 1.5);
         g.setStroke(handColor);
         g.strokeLine(0, 0, (int) minPointX, (int) minPointY);
     }
